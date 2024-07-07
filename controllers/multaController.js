@@ -49,7 +49,14 @@ const obtenerMultas = async (req, res) => {
     const multas = [];
 
     multasSnapshot.forEach(doc => {
-      multas.push({ id: doc.id, ...doc.data() });
+      multas.push({ 
+        id: doc.id, 
+        identifier: doc.data().id, // Cambiamos 'id' a 'identifier'
+        descripcion: doc.data().descripcion,
+        fecha: doc.data().fecha,
+        valor: doc.data().valor,
+        pagada: doc.data().pagada
+      });
     });
 
     res.send(multas);
@@ -57,6 +64,7 @@ const obtenerMultas = async (req, res) => {
     res.status(500).send({ mensaje: 'Error al obtener las multas', error });
   }
 };
+
 
 module.exports = {
   crearMulta,
