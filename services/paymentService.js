@@ -1,9 +1,12 @@
-const axios = require('axios');
+const axios = require("axios");
 
 const pagarConTarjeta = async (paymentDetails) => {
-  return await axios.post('https://fake-paymentportal.onrender.com/api/v1/payment/card', paymentDetails);
+  return await axios.post(
+    "https://api-fake-paymentportal-production.up.railway.app/v1/payment/card",
+    paymentDetails
+  );
 };
 
 module.exports = {
-  pagarConTarjeta
+  pagarConTarjeta,
 };
