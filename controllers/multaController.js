@@ -1,5 +1,6 @@
 const db = require("../config/firebase");
 const paymentService = require("../services/paymentService");
+const { cifrarPayload } = require("../services/encryptionService");
 
 const crearMulta = async (req, res) => {
   try {
@@ -75,8 +76,42 @@ const obtenerMultas = async (req, res) => {
   }
 };
 
+const verificarMultas = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const multasSnapshot = await db
+      .collection("multas")
+      .where("id", "==", id)
+      .limit(1) // Solo necesitamos saber si existe al menos una
+      .get();
+
+    const tieneMultas = !multasSnapshot.empty;
+
+    // Preparar el payload a cifrar
+    const payload = {
+      id,
+      tieneMultas,
+      mensaje: tieneMultas
+        ? "El usuario tiene multas registradas"
+        : "El usuario no tiene multas registradas",
+      timestamp: new Date().toISOString(),
+    };
+
+    // Cifrar el payload usando KMS
+    const payloadCifrado = await cifrarPayload(payload);
+
+    res.send({
+      encrypted: true,
+      data: payloadCifrado,
+    });
+  } catch (error) {
+    res.status(500).send({ mensaje: "Error al verificar las multas", error });
+  }
+};
+
 module.exports = {
   crearMulta,
   pagarMulta,
   obtenerMultas,
+  verificarMultas,
 };

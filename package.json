@@ -4,6 +4,7 @@
     "start": "node index.js"
   },
   "dependencies": {
+    "@google-cloud/kms": "^5.0.1",
     "axios": "^1.7.2",
     "bcryptjs": "^3.0.2",
     "body-parser": "^1.20.2",
