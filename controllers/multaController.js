@@ -79,21 +79,24 @@ const obtenerMultas = async (req, res) => {
 const verificarMultas = async (req, res) => {
   try {
     const { id } = req.params;
+
+    // Buscar multas sin pagar (pagada: false)
     const multasSnapshot = await db
       .collection("multas")
       .where("id", "==", id)
-      .limit(1) // Solo necesitamos saber si existe al menos una
+      .where("pagada", "==", false)
+      .limit(1) // Solo necesitamos saber si existe al menos una sin pagar
       .get();
 
-    const tieneMultas = !multasSnapshot.empty;
+    const tieneMultasSinPagar = !multasSnapshot.empty;
 
     // Preparar el payload a cifrar
     const payload = {
       id,
-      tieneMultas,
-      mensaje: tieneMultas
-        ? "El usuario tiene multas registradas"
-        : "El usuario no tiene multas registradas",
+      tieneMultasSinPagar,
+      mensaje: tieneMultasSinPagar
+        ? "El usuario tiene multas sin pagar"
+        : "El usuario no tiene multas pendientes",
       timestamp: new Date().toISOString(),
     };
 

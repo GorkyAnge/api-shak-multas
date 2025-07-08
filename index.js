@@ -16,7 +16,13 @@ app.use(bodyParser.json());
 // Rutas de autenticación
 app.use("/auth", authRoutes);
 
-// Rutas de multas protegidas
+// Ruta específica para verificar multas (sin autenticación)
+app.get(
+  "/multas/verificar/:id",
+  require("./controllers/multaController").verificarMultas
+);
+
+// Rutas de multas protegidas (resto de endpoints)
 app.use("/multas", authMiddleware, multasRoutes);
 
 const PORT = process.env.PORT || 3000;
