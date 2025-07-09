@@ -22,8 +22,8 @@ app.get(
   require("./controllers/multaController").verificarMultas
 );
 
-// Rutas de multas protegidas (resto de endpoints)
-app.use("/multas", authMiddleware, multasRoutes);
+// Rutas de multas (sin protección por token)
+app.use("/multas", multasRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
